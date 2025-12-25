@@ -1,5 +1,7 @@
 # Zork for Emacs
 
+![Logo](logo.svg)
+
 Die komplette Zork-Trilogie (Zork I, II, III) als native Emacs Lisp Implementation.
 
 ## ✅ Status: VOLLSTÄNDIG IMPLEMENTIERT

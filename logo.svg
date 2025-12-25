@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background dark dungeon -->
+  <circle cx="100" cy="100" r="95" fill="#2a1a1a" stroke="#d4a574" stroke-width="3"/>
+  
+  <!-- Stone frame -->
+  <rect x="30" y="30" width="140" height="140" rx="3" fill="#1a1a1a" stroke="#d4a574" stroke-width="2"/>
+  
+  <!-- Stone blocks texture -->
+  <g opacity="0.3" stroke="#8b6f47" stroke-width="0.5">
+    <rect x="30" y="30" width="35" height="35"/>
+    <rect x="65" y="30" width="35" height="35"/>
+    <rect x="100" y="30" width="35" height="35"/>
+    <rect x="135" y="30" width="35" height="35"/>
+    <rect x="30" y="65" width="35" height="35"/>
+    <rect x="135" y="65" width="35" height="35"/>
+    <rect x="30" y="100" width="35" height="35"/>
+    <rect x="135" y="100" width="35" height="35"/>
+  </g>
+  
+  <!-- Torch light effect (top-left) -->
+  <circle cx="50" cy="50" r="25" fill="#ff9933" opacity="0.4"/>
+  
+  <!-- Doorway/Entrance -->
+  <rect x="75" y="65" width="50" height="60" fill="#0a0a0a" stroke="#8b6f47" stroke-width="2"/>
+  
+  <!-- Door frame details -->
+  <line x1="75" y1="95" x2="125" y2="95" stroke="#8b6f47" stroke-width="1"/>
+  <line x1="100" y1="65" x2="100" y2="125" stroke="#8b6f47" stroke-width="1"/>
+  
+  <!-- Mystery symbol/glyph (dungeon magic) -->
+  <circle cx="100" cy="95" r="8" fill="none" stroke="#d4a574" stroke-width="1.5"/>
+  <path d="M 95 90 L 105 100 M 105 90 L 95 100" stroke="#d4a574" stroke-width="1" stroke-linecap="round"/>
+  
+  <!-- Torch flames (bottom) -->
+  <path d="M 65 145 Q 60 135 65 125" fill="none" stroke="#ff6633" stroke-width="2" stroke-linecap="round"/>
+  <path d="M 135 145 Q 140 135 135 125" fill="none" stroke="#ff6633" stroke-width="2" stroke-linecap="round"/>
+  
+  <!-- Gold/treasure glint -->
+  <circle cx="110" cy="140" r="3" fill="#ffdd00" opacity="0.8"/>
+  <circle cx="90" cy="145" r="2" fill="#ffdd00" opacity="0.6"/>
+  
+  <!-- Text: Classic Zork style -->
+  <text x="100" y="162" font-family="'Courier New', monospace" font-size="10" font-weight="bold" text-anchor="middle" fill="#d4a574">ZORK</text>
+  
+  <!-- Corner torches/lights -->
+  <circle cx="40" cy="40" r="4" fill="#ff9933" opacity="0.5"/>
+  <circle cx="160" cy="40" r="4" fill="#ff9933" opacity="0.5"/>
+  <circle cx="40" cy="160" r="4" fill="#ff9933" opacity="0.5"/>
+  <circle cx="160" cy="160" r="4" fill="#ff9933" opacity="0.5"/>
+</svg>
