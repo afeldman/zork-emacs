@@ -15,6 +15,60 @@ Alle drei Spiele sind jetzt spielbar!
 
 ## Installation
 
+### Via straight.el (Empfohlen)
+
+Füge zu deiner `~/.emacs.d/init.el` hinzu:
+
+```elisp
+;; Bootstrap straight.el (falls noch nicht installiert)
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 6))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+
+;; macOS Homebrew Pfade (ARM64 + Intel)
+(add-to-list 'exec-path "/opt/homebrew/bin")
+(add-to-list 'exec-path "/usr/local/bin")
+
+;; ZIL Engine installieren
+(straight-use-package
+ '(emacs-zmachine
+   :type git :host github :repo "afeldman/emacs-zmachine"
+   :files ("elisp/*.el" "emacs-zmachine-pkg.el")))
+
+;; Zork Spiele installieren (ohne historische Quellen)
+(straight-use-package
+ '(zork-emacs
+   :type git :host github :repo "afeldman/zork-emacs"
+   :files ("elisp/*.el" "zork-emacs-pkg.el")))
+```
+
+### Mit use-package
+
+```elisp
+(straight-use-package 'use-package)
+(setq straight-use-package-by-default t)
+
+(use-package emacs-zmachine
+  :straight (:host github :repo "afeldman/emacs-zmachine"
+             :files ("elisp/*.el" "emacs-zmachine-pkg.el")))
+
+(use-package zork-emacs
+  :straight (:host github :repo "afeldman/zork-emacs"
+             :files ("elisp/*.el" "zork-emacs-pkg.el"))
+  :commands (zork-play-game zork-i zork-ii zork-iii)
+  :config
+  (message "Zork trilogy loaded! Use M-x zork-play-game to start."))
+```
+
 ### Manuell
 
 ```elisp
@@ -29,6 +83,7 @@ Alle drei Spiele sind jetzt spielbar!
 - Historische ZIL-Quellen liegen optional unter `zork-source/` und sind nicht für die Installation erforderlich.
 - Für Paket-Builds werden `zork-source/`, `docs/`, `tests/`, `examples/` via `.elpaignore` ausgeschlossen.
 - Abhängigkeit: `emacs-zmachine` ≥ 0.2.0.
+- **straight.el nutzt `:files` Whitelist**, um `zork-source/` automatisch auszuschließen.
 
 ## Usage
 
