@@ -1,0 +1,69 @@
+# Zork Emacs – Classic Text Adventures für Emacs
+
+Die kompletten **Zork-Trilogie** (Zork I, II, III) spielbar im Emacs.
+
+## Installation (ELPA)
+
+```elisp
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+M-x package-install RET zork-emacs RET
+```
+
+Oder manuell:
+
+```bash
+cd ~/.emacs.d/elpa
+git clone https://github.com/afeldman/zork-emacs zork-emacs-0.1.0
+```
+
+## Quickstart
+
+Starte Zork:
+
+```elisp
+M-x zork-i              ;; Zork I
+M-x zork-ii             ;; Zork II (kommt bald)
+M-x zork-iii            ;; Zork III (kommt bald)
+M-x zork-play-game      ;; Wähle Spiel
+```
+
+## Spielbefehle
+
+**Zork I** (vollständig implementiert):
+- `look` / `l` – Schaue dich um
+- `go <dir>` – Gehe nach [north|south|east|west]
+- `take <item>` – Nimm Gegenstand
+- `drop <item>` – Lege ab
+- `examine <item>` / `x` – Untersuche
+- `inventory` / `i` – Inventar
+- `help` / `h` – Hilfe
+- `quit` – Beende Spiel
+
+## Architektur
+
+```
+zork-emacs/
+├── elisp/
+│   └── zork-emacs.el          # Hauptmodul (Launcher, Zork I/II/III)
+├── zork-source/               # (optional) ZIL-Quellcodes
+├── docs/
+├── zork-emacs-pkg.el         # ELPA Package Descriptor
+├── README.md
+└── LICENSE                    # GPL-3.0-or-later
+```
+
+Abhängig von:
+- `emacs-zmachine` ≥0.2.0 – ZIL Game Engine
+- `emacs` ≥27.1
+
+## Lizenzierung
+
+GPL-3.0-or-later. Kompatibel mit historischen Zork-Quellcodes.
+
+## Nächste Schritte
+
+- [ ] Zork II integrieren (Quellcode: https://github.com/historicalsource/zork2)
+- [ ] Zork III integrieren (Quellcode: https://github.com/historicalsource/zork3)
+- [ ] Erweiterte Verben (öffnen, schließen, kämpfen, sprechen)
+- [ ] Save/Load Persistenz (Quetzal Format)
+- [ ] Emacs-Bindings für schnelle Eingabe
