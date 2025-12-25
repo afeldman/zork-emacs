@@ -518,29 +518,34 @@
 (defun zork1-axe-action ()
   "Axe object action."
   (when (zil-verb? 'EXAMINE)
-    (zil-tell "The axe is a formidable weapon, if a bit unwieldy." 'CR)))
+    (zil-tell "The axe is a formidable weapon, if a bit unwieldy." 'CR)
+    t))
 
 (defun zork1-egg-action ()
   "Egg (treasure) object action."
   (when (zil-verb? 'EXAMINE)
-    (zil-tell "The egg is covered with jewels and must be quite valuable." 'CR)))
+    (zil-tell "The egg is covered with jewels and must be quite valuable." 'CR)
+    t))
 
 (defun zork1-chalice-action ()
   "Chalice (treasure) object action."
   (when (zil-verb? 'EXAMINE)
-    (zil-tell "The chalice is made of solid gold and is encrusted with jewels." 'CR)))
+    (zil-tell "The chalice is made of solid gold and is encrusted with jewels." 'CR)
+    t))
 
 (defun zork1-coins-action ()
   "Coins (treasure) object action."
   (when (zil-verb? 'EXAMINE)
-    (zil-tell "These appear to be ancient coins of great value." 'CR)))
+    (zil-tell "These appear to be ancient coins of great value." 'CR)
+    t))
 
 (defun zork1-leaflet-action ()
   "Leaflet object action."
   (when (zil-verb? 'READ)
     (zil-tell "\"WELCOME TO ZORK!
 
-ZORK is a game of adventure, danger, and low cunning. In it you will explore some of the most amazing territory ever seen by mortals. No computer should be without one!\"" 'CR)))
+ZORK is a game of adventure, danger, and low cunning. In it you will explore some of the most amazing territory ever seen by mortals. No computer should be without one!\"" 'CR)
+    t))
 
 ;;; ========== GAME LOOP ==========
 
