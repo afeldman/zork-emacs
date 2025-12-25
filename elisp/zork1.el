@@ -705,19 +705,25 @@ ZORK is a game of adventure, danger, and low cunning. In it you will explore som
   "Start Zork I game."
   (interactive)
   (zork1-init)
+  (zil-setup-buffer)
   (switch-to-buffer zil-output-buffer)
+  (let ((inhibit-read-only t))
+    (erase-buffer))
   (zil-tell "ZORK I: The Great Underground Empire" 'CR
             "Copyright (c) 1983 Infocom, Inc. All rights reserved." 'CR
             "ZORK is a registered trademark of Infocom, Inc." 'CR
             "Ported to Emacs Lisp" 'CR 'CR)
   (zork1-look)
-  
-  (setq zork1-running t)
-  (while zork1-running
-    (zil-tell 'CR "> ")
-    (let ((input (read-string "")))
-      (unless (string-empty-p input)
-        (zork1-parse-command input)))))
+  (zil-tell 'CR "> ")
+  (setq-local zil-command-callback #'zork1-handle-input)
+  (goto-char (point-max)))
+
+(defun zork1-handle-input (input)
+  "Handle input from the ZIL game buffer."
+  (unless (string-empty-p (string-trim input))
+    (zork1-parse-command input))
+  (when zork1-running
+    (zil-tell "> ")))
 
 (provide 'zork1)
 ;;; zork1.el ends here

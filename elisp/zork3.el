@@ -305,19 +305,25 @@
   "Start Zork III game."
   (interactive)
   (zork3-init)
+  (zil-setup-buffer)
   (switch-to-buffer zil-output-buffer)
+  (let ((inhibit-read-only t))
+    (erase-buffer))
   (zil-tell "ZORK III: The Dungeon Master" 'CR
             "Copyright (c) 1982-1984 Infocom, Inc. All rights reserved." 'CR
             "ZORK is a registered trademark of Infocom, Inc." 'CR
             "Ported to Emacs Lisp" 'CR 'CR)
   (zork3-look)
-  
-  (setq zork3-running t)
-  (while zork3-running
-    (zil-tell 'CR "> ")
-    (let ((input (read-string "")))
-      (unless (string-empty-p input)
-        (zork3-parse-command input)))))
+  (zil-tell 'CR "> ")
+  (setq-local zil-command-callback #'zork3-handle-input)
+  (goto-char (point-max)))
+
+(defun zork3-handle-input (input)
+  "Handle input from the ZIL game buffer."
+  (unless (string-empty-p (string-trim input))
+    (zork3-parse-command input))
+  (when zork3-running
+    (zil-tell "> ")))
 
 (provide 'zork3)
 ;;; zork3.el ends here

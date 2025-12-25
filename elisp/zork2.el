@@ -319,19 +319,25 @@ FROTZ - Cause an object to glow with magical light." 'CR)))
   "Start Zork II game."
   (interactive)
   (zork2-init)
+  (zil-setup-buffer)
   (switch-to-buffer zil-output-buffer)
+  (let ((inhibit-read-only t))
+    (erase-buffer))
   (zil-tell "ZORK II: The Wizard of Frobozz" 'CR
             "Copyright (c) 1981-1983 Infocom, Inc. All rights reserved." 'CR
             "ZORK is a registered trademark of Infocom, Inc." 'CR
             "Ported to Emacs Lisp" 'CR 'CR)
   (zork2-look)
-  
-  (setq zork2-running t)
-  (while zork2-running
-    (zil-tell 'CR "> ")
-    (let ((input (read-string "")))
-      (unless (string-empty-p input)
-        (zork2-parse-command input)))))
+  (zil-tell 'CR "> ")
+  (setq-local zil-command-callback #'zork2-handle-input)
+  (goto-char (point-max)))
+
+(defun zork2-handle-input (input)
+  "Handle input from the ZIL game buffer."
+  (unless (string-empty-p (string-trim input))
+    (zork2-parse-command input))
+  (when zork2-running
+    (zil-tell "> ")))
 
 (provide 'zork2)
 ;;; zork2.el ends here
