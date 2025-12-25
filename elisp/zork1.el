@@ -683,6 +683,30 @@ ZORK is a game of adventure, danger, and low cunning. In it you will explore som
      ((and (eq here 'WEST-OF-HOUSE) (eq direction 'EAST))
       (zil-tell "The door is boarded and you can't remove the boards." 'CR))
      
+     ;; North of House connections
+     ((and (eq here 'NORTH-OF-HOUSE) (eq direction 'SOUTH))
+      (zil-goto 'WEST-OF-HOUSE))
+     ((and (eq here 'NORTH-OF-HOUSE) (eq direction 'EAST))
+      (zil-goto 'EAST-OF-HOUSE))
+     ((and (eq here 'NORTH-OF-HOUSE) (eq direction 'WEST))
+      (zil-goto 'WEST-OF-HOUSE))
+     
+     ;; South of House connections
+     ((and (eq here 'SOUTH-OF-HOUSE) (eq direction 'NORTH))
+      (zil-goto 'WEST-OF-HOUSE))
+     ((and (eq here 'SOUTH-OF-HOUSE) (eq direction 'EAST))
+      (zil-goto 'EAST-OF-HOUSE))
+     ((and (eq here 'SOUTH-OF-HOUSE) (eq direction 'WEST))
+      (zil-goto 'WEST-OF-HOUSE))
+     
+     ;; East of House (Behind House) connections
+     ((and (eq here 'EAST-OF-HOUSE) (eq direction 'NORTH))
+      (zil-goto 'NORTH-OF-HOUSE))
+     ((and (eq here 'EAST-OF-HOUSE) (eq direction 'SOUTH))
+      (zil-goto 'SOUTH-OF-HOUSE))
+     ((and (eq here 'EAST-OF-HOUSE) (eq direction 'WEST))
+      (zil-goto 'NORTH-OF-HOUSE))
+     
      ;; Behind House connections
      ((and (eq here 'EAST-OF-HOUSE) (eq direction 'IN))
       (if (zil-fset? 'KITCHEN-WINDOW 'OPENBIT)
