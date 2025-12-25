@@ -1,0 +1,5 @@
+# Exclude non-package content from ELPA/MELPA builds
+zork-source/
+docs/
+tests/
+examples/
