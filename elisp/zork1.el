@@ -223,6 +223,15 @@
     :desc "you"
     :parent 'WEST-OF-HOUSE)
   
+  ;; Mailbox (container for leaflet)
+  (zil-defobj 'MAILBOX
+    :desc "small mailbox"
+    :synonyms '(MAILBOX BOX)
+    :action 'zork1-mailbox-action)
+  (zil-move 'MAILBOX 'WEST-OF-HOUSE)
+  
+  ;; Kitchen Window (moved to behind house / east of house, removed from kitchen)
+  
   ;; Lamp
   (zil-defobj 'LAMP
     :desc "brass lantern"
@@ -272,14 +281,14 @@
     :parent 'LIVING-ROOM
     :action 'zork1-trap-door-action)
   
-  ;; Kitchen Window
+  ;; Kitchen Window (in behind house / east of house)
   (zil-defobj 'KITCHEN-WINDOW
-    :desc "small window"
+    :desc "kitchen window"
     :synonyms '(WINDOW)
     :adjectives '(SMALL KITCHEN)
     :flags '(DOORBIT)
-    :parent 'KITCHEN
     :action 'zork1-window-action)
+  (zil-move 'KITCHEN-WINDOW 'EAST-OF-HOUSE)
   
   ;; Sack of Lunch
   (zil-defobj 'LUNCH
@@ -370,15 +379,15 @@
     :action 'zork1-coins-action
     :ldesc "There are many coins here!")
   
-  ;; Leaflet
+  ;; Leaflet (inside mailbox)
   (zil-defobj 'LEAFLET
     :desc "leaflet"
     :synonyms '(LEAFLET PAMPHLET BOOKLET FLIER)
     :adjectives '(SMALL)
     :flags '(TAKEBIT READBIT)
-    :parent 'WEST-OF-HOUSE
     :action 'zork1-leaflet-action
-    :ldesc "A small leaflet is on the ground."))
+    :ldesc "A small leaflet is on the ground.")
+  (zil-move 'LEAFLET 'MAILBOX))
 
 ;;; ========== OBJECT ACTIONS ==========
 
@@ -390,14 +399,16 @@
         (zil-tell "The lamp is already on." 'CR)
       (zil-setg 'LAMP-ON t)
       (zil-fset 'LAMP 'ONBIT)
-      (zil-tell "The brass lantern is now on." 'CR)))
+      (zil-tell "The brass lantern is now on." 'CR))
+    t)
    
    ((zil-verb? 'TURNOFF 'OFF)
     (if (not (zil-getg 'LAMP-ON))
         (zil-tell "The lamp is already off." 'CR)
       (zil-setg 'LAMP-ON nil)
       (zil-fclear 'LAMP 'ONBIT)
-      (zil-tell "The brass lantern is now off." 'CR)))
+      (zil-tell "The brass lantern is now off." 'CR))
+    t)
    
    ((zil-verb? 'EXAMINE)
     (zil-tell "The lamp is a shiny brass lamp"
@@ -412,17 +423,20 @@
   "Rug object action."
   (cond
    ((zil-verb? 'TAKE)
-    (zil-tell "The rug is too heavy to lift." 'CR))
+    (zil-tell "The rug is too heavy to lift." 'CR)
+    t)
    
    ((zil-verb? 'MOVE 'LIFT 'RAISE)
     (if (zil-fset? 'RUG 'MOVEDBIT)
         (zil-tell "The rug is too heavy to move." 'CR)
       (zil-fset 'RUG 'MOVEDBIT)
       (zil-fset 'TRAP-DOOR 'VISIBLEBIT)
-      (zil-tell "With a great effort, you lift the corner of the rug. Underneath is a closed trap door!" 'CR)))
+      (zil-tell "With a great effort, you lift the corner of the rug. Underneath is a closed trap door!" 'CR))
+    t)
    
    ((zil-verb? 'EXAMINE)
-    (zil-tell "It's a beautiful oriental rug with a very intricate pattern." 'CR))))
+    (zil-tell "It's a beautiful oriental rug with a very intricate pattern." 'CR)
+    t)))
 
 (defun zork1-trophy-case-action ()
   "Trophy case object action."
@@ -460,17 +474,6 @@
         (zil-tell "It's already closed." 'CR)
       (zil-fclear 'TRAP-DOOR 'OPENBIT)
       (zil-tell "The door swings shut and closes." 'CR)))))
-
-(defun zork1-window-action ()
-  "Window object action."
-  (cond
-   ((zil-verb? 'OPEN)
-    (zil-fset 'KITCHEN-WINDOW 'OPENBIT)
-    (zil-tell "With great effort, you open the window far enough to allow entry." 'CR))
-   
-   ((zil-verb? 'CLOSE)
-    (zil-fclear 'KITCHEN-WINDOW 'OPENBIT)
-    (zil-tell "The window closes (more easily than it opened)." 'CR))))
 
 (defun zork1-lunch-action ()
   "Lunch sack object action."
@@ -538,6 +541,42 @@
   (when (zil-verb? 'EXAMINE)
     (zil-tell "These appear to be ancient coins of great value." 'CR)
     t))
+
+(defun zork1-mailbox-action ()
+  "Mailbox object action."
+  (cond
+   ((zil-verb? 'OPEN)
+    (if (zil-fset? 'MAILBOX 'OPENBIT)
+        (zil-tell "The mailbox is already open." 'CR)
+      (progn
+        (zil-fset 'MAILBOX 'OPENBIT)
+        (zil-tell "Opening the small mailbox reveals a leaflet." 'CR)))
+    t)
+   ((zil-verb? 'CLOSE)
+    (if (not (zil-fset? 'MAILBOX 'OPENBIT))
+        (zil-tell "The mailbox is already closed." 'CR)
+      (progn
+        (zil-fclear 'MAILBOX 'OPENBIT)
+        (zil-tell "The mailbox is now closed." 'CR)))
+    t)))
+
+(defun zork1-window-action ()
+  "Kitchen window object action."
+  (cond
+   ((zil-verb? 'OPEN)
+    (if (zil-fset? 'KITCHEN-WINDOW 'OPENBIT)
+        (zil-tell "The window is already open." 'CR)
+      (progn
+        (zil-fset 'KITCHEN-WINDOW 'OPENBIT)
+        (zil-tell "With great effort, you open the window far enough to allow entry." 'CR)))
+    t)
+   ((zil-verb? 'CLOSE)
+    (if (not (zil-fset? 'KITCHEN-WINDOW 'OPENBIT))
+        (zil-tell "The window is already closed." 'CR)
+      (progn
+        (zil-fclear 'KITCHEN-WINDOW 'OPENBIT)
+        (zil-tell "The window closes (more easily than it opened)." 'CR)))
+    t)))
 
 (defun zork1-leaflet-action ()
   "Leaflet object action."
@@ -609,7 +648,11 @@ ZORK is a game of adventure, danger, and low cunning. In it you will explore som
       (zil-tell "Dropped." 'CR)))))
 
 (defun zork1-find-object (name)
-  "Find object by name in current room or inventory."
+  "Find object by name in current room or inventory.
+Objects are visible if:
+  1. They are in PLAYER inventory, OR
+  2. They are directly in current room, OR
+  3. They are in a container in current room that's open (has OPENBIT flag)"
   (let ((here (zil-getg 'HERE))
         result)
     ;; Check inventory
@@ -618,12 +661,22 @@ ZORK is a game of adventure, danger, and low cunning. In it you will explore som
                 (memq name (plist-get (zil-object-get obj) :synonyms)))
         (setq result obj)))
     
-    ;; Check current room
+    ;; Check current room - with visibility logic
     (unless result
       (dolist (obj (zil-children here))
         (when (or (eq obj name)
                   (memq name (plist-get (zil-object-get obj) :synonyms)))
           (setq result obj))))
+    
+    ;; Check containers in current room (if object not found directly)
+    (unless result
+      (dolist (container (zil-children here))
+        ;; Only check if container is open
+        (when (zil-fset? container 'OPENBIT)
+          (dolist (obj (zil-children container))
+            (when (or (eq obj name)
+                      (memq name (plist-get (zil-object-get obj) :synonyms)))
+              (setq result obj))))))
     
     result))
 
@@ -645,6 +698,105 @@ ZORK is a game of adventure, danger, and low cunning. In it you will explore som
                 (zil-tell "You see nothing special about the " (symbol-name obj-id) "." 'CR))))
         (zil-tell "You don't see that here." 'CR)))))
 
+(defun zork1-open (words)
+  "Open an object."
+  (if (null words)
+      (zil-tell "What do you want to open?" 'CR)
+    (let* ((obj-name (intern (upcase (car words))))
+           (obj-id (zork1-find-object obj-name))
+           (obj (and obj-id (zil-object-get obj-id)))
+           (action (and obj (plist-get obj :action))))
+      (if obj-id
+          (progn
+            (zil-setg 'PRSO obj-id)
+            (zil-setg 'PRSA :open)
+            (if (and action (funcall action))
+                nil
+              (zil-tell "You can't open that." 'CR)))
+        (zil-tell "You don't see that here." 'CR)))))
+
+(defun zork1-close (words)
+  "Close an object."
+  (if (null words)
+      (zil-tell "What do you want to close?" 'CR)
+    (let* ((obj-name (intern (upcase (car words))))
+           (obj-id (zork1-find-object obj-name))
+           (obj (and obj-id (zil-object-get obj-id)))
+           (action (and obj (plist-get obj :action))))
+      (if obj-id
+          (progn
+            (zil-setg 'PRSO obj-id)
+            (zil-setg 'PRSA :close)
+            (if (and action (funcall action))
+                nil
+              (zil-tell "You can't close that." 'CR)))
+        (zil-tell "You don't see that here." 'CR)))))
+
+(defun zork1-enter (words)
+  "Enter a location or object."
+  (let ((here (zil-getg 'HERE)))
+    (cond
+     ;; Can only enter house from behind house (EAST-OF-HOUSE) if window is open
+     ((eq here 'EAST-OF-HOUSE)
+      (if (zil-fset? 'KITCHEN-WINDOW 'OPENBIT)
+          (progn
+            (zil-tell "You climb through the window." 'CR)
+            (zil-goto 'KITCHEN))
+        (zil-tell "The window is closed - you can't enter that way." 'CR)))
+     (t (zil-tell "You can't enter anything from here." 'CR)))))
+
+(defun zork1-move (words)
+  "Move an object (like 'move rug')."
+  (if (null words)
+      (zil-tell "What do you want to move?" 'CR)
+    (let* ((obj-name (intern (upcase (car words))))
+           (obj-id (zork1-find-object obj-name))
+           (obj (and obj-id (zil-object-get obj-id)))
+           (action (and obj (plist-get obj :action))))
+      (if obj-id
+          (progn
+            (zil-setg 'PRSO obj-id)
+            (zil-setg 'PRSA :move)
+            (if (and action (funcall action))
+                nil
+              (zil-tell "You can't move that." 'CR)))
+        (zil-tell "You don't see that here." 'CR)))))
+
+(defun zork1-turn-on (words)
+  "Turn on an object (like 'turn on lamp')."
+  (if (null words)
+      (zil-tell "Turn on what?" 'CR)
+    (let* ((obj-name (intern (upcase (car words))))
+           (obj-id (zork1-find-object obj-name))
+           (obj (and obj-id (zil-object-get obj-id)))
+           (action (and obj (plist-get obj :action))))
+      (if obj-id
+          (progn
+            (zil-setg 'PRSO obj-id)
+            (zil-setg 'PRSA :on)
+            (if (and action (funcall action))
+                nil
+              (zil-tell "You can't turn that on." 'CR)))
+        (zil-tell "You don't see that here." 'CR)))))
+
+(defun zork1-turn-off (words)
+  "Turn off an object (like 'turn off lamp')."
+  (if (null words)
+      (zil-tell "Turn off what?" 'CR)
+    (let* ((obj-name (intern (upcase (car words))))
+           (obj-id (zork1-find-object obj-name))
+           (obj (and obj-id (zil-object-get obj-id)))
+           (action (and obj (plist-get obj :action))))
+      (if obj-id
+          (progn
+            (zil-setg 'PRSO obj-id)
+            (zil-setg 'PRSA :turnoff)
+            (if (and action (funcall action))
+                nil
+              (zil-tell "You can't turn that off." 'CR)))
+        (zil-tell "You don't see that here." 'CR)))))
+
+
 (defun zork1-parse-command (input)
   "Parse player input and execute command."
   (let* ((words (split-string (downcase input) " " t))
@@ -652,6 +804,12 @@ ZORK is a game of adventure, danger, and low cunning. In it you will explore som
          (args (cdr words)))
     
     (cond
+     ;; Two-word verbs (turn on/off)
+     ((and (equal verb "turn") (member (car args) '("on" "off")))
+      (if (equal (car args) "on")
+          (zork1-turn-on (cdr args))
+        (zork1-turn-off (cdr args))))
+     
      ;; Movement
      ((member verb '("n" "north")) (zork1-go 'NORTH))
      ((member verb '("s" "south")) (zork1-go 'SOUTH))
@@ -666,6 +824,10 @@ ZORK is a game of adventure, danger, and low cunning. In it you will explore som
      ((member verb '("take" "get")) (zork1-take args))
      ((member verb '("drop")) (zork1-drop args))
      ((member verb '("read" "examine" "x")) (zork1-examine args))
+     ((equal verb "open") (zork1-open args))
+     ((equal verb "close") (zork1-close args))
+     ((member verb '("enter" "go")) (zork1-enter args))
+     ((member verb '("move" "lift" "raise" "push")) (zork1-move args))
      ((equal verb "quit") (setq zork1-running nil))
      
      ;; Unknown
