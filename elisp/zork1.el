@@ -638,7 +638,8 @@ ZORK is a game of adventure, danger, and low cunning. In it you will explore som
             (zil-setg 'PRSO obj-id)
             (zil-setg 'PRSA 'READ)
             ;; Call object action
-            (let ((action (zil-object-prop obj-id 'ACTION)))
+            (let* ((obj (zil-object-get obj-id))
+                   (action (plist-get obj :action)))
               (if (and action (funcall action))
                   nil
                 (zil-tell "You see nothing special about the " (symbol-name obj-id) "." 'CR))))
