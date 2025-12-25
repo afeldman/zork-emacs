@@ -18,8 +18,8 @@ Alle drei Spiele sind jetzt spielbar!
 ### Manuell
 
 ```elisp
-(add-to-list 'load-path "~/Projects/priv/emacs-zmachine/elisp")
-(add-to-list 'load-path "~/Projects/priv/zork-emacs/elisp")
+(add-to-list 'load-path "~/<PATH TO>/emacs-zmachine/elisp")
+(add-to-list 'load-path "~/<PATH TO>/zork-emacs/elisp")
 (require 'zork-emacs)
 ```
 
