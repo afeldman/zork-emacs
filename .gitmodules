@@ -1,0 +1,9 @@
+[submodule "zork-source/zork1"]
+	path = zork-source/zork1
+	url = https://github.com/historicalsource/zork1
+[submodule "zork-source/zork2"]
+	path = zork-source/zork2
+	url = https://github.com/historicalsource/zork2
+[submodule "zork-source/zork3"]
+	path = zork-source/zork3
+	url = https://github.com/historicalsource/zork3
