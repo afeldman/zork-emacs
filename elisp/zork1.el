@@ -622,6 +622,23 @@ ZORK is a game of adventure, danger, and low cunning. In it you will explore som
     
     result))
 
+(defun zork1-examine (words)
+  "Examine or read an object."
+  (if (null words)
+      (zil-tell "What do you want to examine?" 'CR)
+    (let* ((obj-name (intern (upcase (car words))))
+           (obj-id (zork1-find-object obj-name)))
+      (if obj-id
+          (progn
+            (zil-setg 'PRSO obj-id)
+            (zil-setg 'PRSA 'READ)
+            ;; Call object action
+            (let ((action (zil-getp obj-id 'ACTION)))
+              (if (and action (funcall action))
+                  nil
+                (zil-tell "You see nothing special about the " (symbol-name obj-id) "." 'CR))))
+        (zil-tell "You don't see that here." 'CR)))))
+
 (defun zork1-parse-command (input)
   "Parse player input and execute command."
   (let* ((words (split-string (downcase input) " " t))
@@ -642,6 +659,7 @@ ZORK is a game of adventure, danger, and low cunning. In it you will explore som
      ((member verb '("i" "inv" "inventory")) (zork1-inventory))
      ((member verb '("take" "get")) (zork1-take args))
      ((member verb '("drop")) (zork1-drop args))
+     ((member verb '("read" "examine" "x")) (zork1-examine args))
      ((equal verb "quit") (setq zork1-running nil))
      
      ;; Unknown
